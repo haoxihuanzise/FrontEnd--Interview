@@ -221,7 +221,7 @@
 1. Canvas和SVG的比较
 
     | Canvas | SVG |
-    |:-:|:-:|
+    |:-|:-|
     |位图技术，可以保存为.png | 矢量图技术，不能保存为位图 |
     |善于表现颜色和线条细节 | 可以缩放，不善于表现细节 |
     |网页游戏，统计图|图标，统计图，地图|
@@ -232,8 +232,8 @@
 1. 谈谈你对 JavaScript 中的模块规范 CommonJS、AMD、CMD 的了解？
 
     | CommonJS |   AMD    | CMD     |
-    |----------|----------|---------|
-    |   Node.js|RequireJS | SeaJS   |
+    |:----------|:----------|:---------|
+    |Node.js|RequireJS|SeaJS|
 
 1. 前端MVC，MVVM;
     * MVC----模型（Model）：数据保存;视图（View）：用户界面;控制器（Controller）：业务逻辑;
