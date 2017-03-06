@@ -287,7 +287,7 @@
         * “504″ : Gateway Time-out（网关超时） 由作为代理或网关的服务器使用，表示不能及时地从远程服务器获得应答。（HTTP 1.1新）
         * “505″ : HTTP Version not supported（HTTP 版本不受支持）不支持请求中所使用的 HTTP 协议版本。
 
-1. 如何阻止时间的冒泡?
+1. 如何阻止事件的冒泡?
 
     ```javascript
     //阻止冒泡的方法
@@ -332,7 +332,7 @@
     ```JavaScript
     function getX(e){
         e = e || window.event;
-        //先检查非IE浏览器，在检查IE的位置
+        //先检查非IE浏览器，再检查IE的位置
         return e.pageX || e.clentX + document.body.scrollLeft;
     }
     ```
@@ -343,11 +343,11 @@
     function add(n){
         getN=function(){console.log(n);}
         return function(m){
-        n+=m;
-        arguments.callee.toString=function(){
-            return n;
-        }
-        return arguments.callee;
+            n+=m;
+            arguments.callee.toString=function(){
+                return n;
+            }
+            return arguments.callee;
         }
     }
     add(1)(2)(3); getN();//6
@@ -360,16 +360,16 @@
     ```javascript
     var emp={
         work:function(){//3,2,1
-            var  sum=0;//+3+2+1 +2+1  +1
-            for(vari=0; i<arguments.length&&arguments[0]>0;i++){
-                sum+=arguments[i]
-                    +arguments.callee(
-                    --arguments[i]
-                    );
-            }
+                var  sum=0;//+3+2+1 +2+1  +1
+                for(vari=0; i<arguments.length&&arguments[0]>0;i++){
+                    sum+=arguments[i]
+                        +arguments.callee(
+                            --arguments[i]
+                        );
+                }
             return sum;
+            }
         }
-    }
     console.log(emp.work(3,2,1));//10
     ```
 
@@ -493,15 +493,15 @@
     使用方法：
     (1) 在页面头部像下面一样加入一个 manifest 的属性；
     (2) 在 cache.manifest 文件里编写离线存储资源；
-    CACHE MANIFEST
-    #v0.11
-    CACHE：
-        js/app.js
-        css/style.css
-    NETWORK:
-        resource/logo.png
-    FALLBACK：
-        / /offline.html
+        CACHE MANIFEST
+        #v0.11
+        CACHE：
+            js/app.js
+            css/style.css
+        NETWORK:
+            resource/logo.png
+        FALLBACK：
+            / /offline.html
     (3) 在离线状态时，操作 window.applicationCache 进行需求实现；
     ```
 
@@ -521,9 +521,9 @@
     Web Storage有两种形式：LocalStorage（本地存储）和sessionStorage（会话存储）。这两种方式都允许开发者使用js设置的键值对进行操作，在在重新加载不同的页面的时候读出它们。这一点与cookie类似。
     （1）与cookie不同的是：Web Storage数据完全存储在客户端，不需要通过浏览器的请求将数据传给服务器，因此x相比cookie来说能够存储更多的数据，大概5M左右。
     （2）LocalStorage和sessionStorage功能上是一样的，但是存储持久时间不一样。
-    LocalStorage：浏览器关闭了数据仍然可以保存下来，并可用于所有同源（相同的域名、协议和端口）窗口（或标签页）；
-    sessionStorage：数据存储在窗口对象中，窗口关闭后对应的窗口对象消失，存储的数据也会丢失。
-    注意：sessionStorage 都可以用localStorage 来代替，但需要记住的是，在窗口或者标签页关闭时，使用sessionStorage 存储的数据会丢失。
+        LocalStorage：浏览器关闭了数据仍然可以保存下来，并可用于所有同源（相同的域名、协议和端口）窗口（或标签页）；
+        sessionStorage：数据存储在窗口对象中，窗口关闭后对应的窗口对象消失，存储的数据也会丢失。
+        注意：sessionStorage 都可以用localStorage 来代替，但需要记住的是，在窗口或者标签页关闭时，使用sessionStorage 存储的数据会丢失。
     （3）使用 local storage和session storage主要通过在js中操作这两个对象来实现，分别为window.localStorage和window.sessionStorage. 这两个对象均是Storage类的两个实例，自然也具有Storage类的属性和方法。
     ```
 1. ifame有哪些缺点
@@ -553,10 +553,10 @@
     （3）IE6双边距bug:块属性标签float后，又有横行的margin情况下，在IE 6显示margin比设置的大。
     （4）浮动ie产生的双边距问题：块级元素就加display：inline；行内元素转块级元素display：inline后面再加display：table。
             .bb{
-            background-color:#f1ee18;        /*所有识别*/
-            .background-color:#00deff\9;        /*IE6、7、8识别*/
-            +background-color:#a200ff;        /*IE6、7识别*/
-            _background-color:#1e0bd1;        /*IE6识别*/
+                background-color:#f1ee18;        /*所有识别*/
+                .background-color:#00deff\9;        /*IE6、7、8识别*/
+                +background-color:#a200ff;        /*IE6、7识别*/
+                _background-color:#1e0bd1;        /*IE6识别*/
             }
     ```
 
