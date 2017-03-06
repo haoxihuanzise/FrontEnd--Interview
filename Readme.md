@@ -236,14 +236,14 @@
     |Node.js|RequireJS|SeaJS|
 
 1. 前端MVC，MVVM;
-    * MVC----模型（Model）：数据保存;视图（View）：用户界面;控制器（Controller）：业务逻辑;
+    * MVC----模型(Model):数据保存; 视图(View):用户界面;控制器(Controller):业务逻辑;
         1. `View` 传送指令到 `Controller`
         1. `Controller` 完成业务逻辑后，要求 `Model` 改变状态
         1. `Model` 将新的数据发送到 `View` ，用户得到反馈所有通信都是单向的。
     * MVVM----模型(Model)，视图(View)，视图模型(ViewModel)
         1. 各部分间都是双向通信
         1. `View` 与 `Model` 不发生联系，都通过 `ViewModel` 传递
-        1. `View` 非常薄，不部署任何业务逻辑，称为“被动视图”（Passive View），即没有任何主动性；而 `ViewModel` 非常厚，所有逻辑都部署在那里。采用双向绑定（`data-binding`）：`View` 的变动，自动反映在 `ViewModel` ，反之亦然。
+        1. `View` 非常薄，不部署任何业务逻辑，称为“被动视图”（Passive View），即没有任何主动性；而 `ViewModel` 非常厚，所有逻辑都部署在那里。采用双向绑定(`data-binding`):`View` 的变动，自动反映在 `ViewModel` ，反之亦然。
 
 1. HTTP协议的状态消息都有哪些?(如200、302对应的描述)
     * 协议是指计算机通信网络中两台计算机之间进行通信所必须共同遵守的规定或规则，超文本传输协议(HTTP)是一种通信协议，它允许将超文本标记语言(HTML)文档从Web服务器传送到客户端的浏览器，
