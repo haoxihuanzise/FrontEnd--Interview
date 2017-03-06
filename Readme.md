@@ -173,7 +173,7 @@
     * 内存泄漏是指任何对象在您不再拥有或需要它之后依然存在
     * 例如：setTimeout 的第一个参数使用字符串而非函数的话，会引发内存泄漏
 
-1. jQuery中ruhr将数组转化为json字符串，然后再转化回来
+1. jQuery中如何将数组转化为json字符串，然后再转化回来
     ```javascript
     //jQuery 中没有提供这个功能，所以需要先编写两个 jQuery 的扩展：
     $.fn.stringifyArray = function(array) {
