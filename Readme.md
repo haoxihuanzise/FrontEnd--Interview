@@ -142,8 +142,8 @@
                         script.onreadystatechange = null;
                         callback();
                 }
-        };
-    } else {
+            }
+        } else {
         //Others: Firefox, Safari, Chrome, and Opera
             script.onload = function(){
                 callback();
