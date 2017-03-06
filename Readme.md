@@ -112,6 +112,41 @@
     1. 获取异步调用返回的数据
     1. 使用JavaScript和DOM实现局部刷新
 
+    ```javascript
+    // 1.获得ajax
+    if (window.XMLHttpRequest) { //查看当前浏览器XMLHttpRequest是否是全局变量
+        var oAjax = new XMLHttpResquest();
+    } else {
+        var oAjax = new ActiveXObject('Microsoft.XMLHTTP'); //IE6,传入微软参数
+    }
+
+    // 2.打开地址
+    switch (json.type.toLowerCase()) {
+        case 'get':
+            oAjax.open('GET', json.url + '?' + jsonToURL(json.data), true); // 提交方式(大写)，url，是否异步
+            oAjax.send(); // 3.发送数据
+            break;
+        case 'post':
+            oAjax.open('POST', json.url, true);
+            oAjax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            oAjax.send(jsonToURL(json.data)); // 3.发送数据
+            break;
+    }
+
+    // 4.接收数据
+    oAjax.onreadystatechange = function() { //监控状态
+        if (oAjax.readyState == 4) {
+            json.complete && json.complete();
+            if (oAjax.status >= 200 && oAjax.status < 300 ||
+                oAjax.status == 304) {
+                json.success && json.success(oAjax.responseText); //执行成功的回调函数, responseText为响应内容
+            } else {
+                json.error && json.error(oAjax.status); //执行失败的回调函数
+            }
+        }
+    };
+    ```
+
 1. ES6怎么写class，为何会出现class？
     * ES6的class可以看作是一个语法糖，他的绝大部分功能，ES5都可以做到，新的class写法只是让对象原型的写法更加清晰·更加面向对象编程的语法而已
 
