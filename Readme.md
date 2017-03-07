@@ -5,14 +5,6 @@
     * 数据封装对象：Object、Array、Boolean、Number、String
     * 其他对象（FAMDRE）：Function、Argument、Math、Date、RegExp、Error
 
-1. 写出大于1024并小于1360屏幕的媒体查询关键代码
-
-    ```css
-    @Media screen and min-width(1024px) and max-width(1360px){
-        //doSomething
-    }
-    ```
-
 1. 介绍一下javascript原型，原型链，他们有何特点
     * 每个对象都会在内部初始化一个属性，就是prototype（原型），当我们访问一个对象的属性时，如果这个对象内部不存在这个属性，那么他就会去prototype里找这个属性，这个prototype又会有自己的prototype，于是就这样一直找下去，也就是我们平时所说的原型链的概念。
     * 特点：JavaScript对象是通过引用来传递的，我们创建的每个新对象实体中并没有一份属于自己的原型副本，当我们修改原型时，与之相关的对象也会继承这一改变。当我们需要一个属性时，JavaScript引擎会先看当前对象中是否有这个属性，如果没有的话，就会查找它的prototype对象是否有这个属性，如此递推下去，一致检索到Object内建对象。
@@ -629,4 +621,12 @@
     (2)变量符不一样，less是@，而Scss是$，而且变量的作用域也不一样，后面会讲到。
     (3)输出设置，Less没有输出设置，Sass提供4中输出选项：nested, compact, compressed 和 expanded。
     (4)Sass支持条件语句，可以使用if{}else{},for{}循环等等。而Less不支持。
+    ```
+
+1. 写出大于1024并小于1360屏幕的媒体查询关键代码
+
+    ```css
+    @Media screen and min-width(1024px) and max-width(1360px){
+        //doSomething
+    }
     ```
