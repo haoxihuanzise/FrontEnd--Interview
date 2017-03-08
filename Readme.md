@@ -630,3 +630,25 @@
         //doSomething
     }
     ```
+
+1. 如何让chrome盒模型(w3c标准盒模型)显示的和IE的一致?
+
+    1. 标准浏览器盒子模型的宽度 = width + padding-left + padding-right + border-left + border-right + margin-left + margin-right
+    1. IE浏览器(6-8)盒子模型的宽度 = width + margin-left + margin-right
+
+    方法 : `display:border-box;`
+
+1. Array自带的排序Sort是怎么实现的?
+
+    基于一种更复杂的快排实现的(`sort`会破坏原数组内部的顺序)
+
+1. navigator对象
+
+    navigator对象包含有关浏览器的信息. [更多信息请点击](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/navigator)
+
+    | 属性 | 描述 |
+    |:-- |:-- |
+    |appCodeName|返回浏览器的代码名|
+    |appMinorVersion|返回浏览器的次级版本|
+    |appName|返回浏览器的名称|
+    |appVersion|返回浏览器的平台和版本信息|
