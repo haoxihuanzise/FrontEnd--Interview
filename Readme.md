@@ -272,48 +272,6 @@
         1. `View` 与 `Model` 不发生联系，都通过 `ViewModel` 传递
         1. `View` 非常薄，不部署任何业务逻辑，称为“被动视图”（Passive View），即没有任何主动性；而 `ViewModel` 非常厚，所有逻辑都部署在那里。采用双向绑定(`data-binding`):`View` 的变动，自动反映在 `ViewModel` ，反之亦然。
 
-1. HTTP协议的状态消息都有哪些?(如200、302对应的描述)
-    * 协议是指计算机通信网络中两台计算机之间进行通信所必须共同遵守的规定或规则，超文本传输协议(HTTP)是一种通信协议，它允许将超文本标记语言(HTML)文档从Web服务器传送到客户端的浏览器，
-        * “100″ : Continue（继续） 初始的请求已经接受，客户应当继续发送请求的其余部分。（HTTP 1.1新）
-        * “101″ : Switching Protocols（切换协议） 请求者已要求服务器切换协议，服务器已确认并准备进行切换。（HTTP 1.1新）
-        * “200″ : OK（成功） 一切正常，对GET和POST请求的应答文档跟在后面。
-        * “201″ : Created（已创建）服务器已经创建了文档，Location头给出了它的URL。
-        * “202″ : Accepted（已接受）服务器已接受了请求，但尚未对其进行处理。
-        * “203″ : Non-Authoritative Information（非授权信息） 文档已经正常地返回，但一些应答头可能不正确，可能来自另一来源 。（HTTP 1.1新）。
-        * “204″ : No Content（无内容）未返回任何内容，浏览器应该继续显示原来的文档。
-        * “205″ : Reset Content（重置内容）没有新的内容，但浏览器应该重置它所显示的内容。用来强制浏览器清除表单输入内容（HTTP 1.1新）。
-        * “206″ : Partial Content（部分内容）服务器成功处理了部分 GET 请求。（HTTP 1.1新）
-        * “300″ : Multiple Choices（多种选择）客户请求的文档可以在多个位置找到，这些位置已经在返回的文档内列出。如果服务器要提出优先选择，则应该在Location应答头指明。
-        * “301″ : Moved Permanently（永久移动）请求的网页已被永久移动到新位置。服务器返回此响应（作为对 GET 或 HEAD 请求的响应）时，会自动将请求者转到新位置。
-        * “302″ : Found（临时移动）类似于301，但新的URL应该被视为临时性的替代，而不是永久性的。注意，在HTTP1.0中对应的状态信息是“Moved Temporatily”，出现该状态代码时，浏览器能够自动访问新的URL，因此它是一个很有用的状态代码。注意这个状态代码有时候可以和301替换使用。例如，如果浏览器错误地请求`http://host/~user`（缺少了后面的斜杠），有的服务器返回301，有的则返回302。严格地说，我们只能假定只有当原来的请求是GET时浏览器才会自动重定向。请参见307。
-        * “303″ : See Other（查看其他位置）类似于301/302，不同之处在于，如果原来的请求是POST，Location头指定的重定向目标文档应该通过GET提取（HTTP 1.1新）。
-        * “304″ : Not Modified（未修改）自从上次请求后，请求的网页未被修改过。原来缓冲的文档还可以继续使用，不会返回网页内容。
-        * “305″ : Use Proxy（使用代理）只能使用代理访问请求的网页。如果服务器返回此响应，那么，服务器还会指明请求者应当使用的代理。（HTTP 1.1新）
-        * “307″ : Temporary Redirect（临时重定向）和 302（Found）相同。许多浏览器会错误地响应302应答进行重定向，即使原来的请求是POST，即使它实际上只能在POST请求的应答是303时才能重定向。由于这个原因，HTTP 1.1新增了307，以便更加清除地区分几个状态代码：当出现303应答时，浏览器可以跟随重定向的GET和POST请求；如果是307应答，则浏览器只能跟随对GET请求的重定向。（HTTP 1.1新）
-        * “400″ : Bad Request（错误请求）请求出现语法错误。
-        * “401″ : Unauthorized（未授权）客户试图未经授权访问受密码保护的页面。应答中会包含一个WWW-Authenticate头，浏览器据此显示用户名字/密码对话框，然后在填写合适的Authorization头后再次发出请求。
-        * “403″ : Forbidden（已禁止） 资源不可用。服务器理解客户的请求，但拒绝处理它。通常由于服务器上文件或目录的权限设置导致。
-        * “404″ : Not Found（未找到）无法找到指定位置的资源。
-        * “405″ : Method Not Allowed（方法禁用）请求方法（GET、POST、HEAD、DELETE、PUT、TRACE等）禁用。（HTTP 1.1新）
-        * “406″ : Not Acceptable（不接受）指定的资源已经找到，但它的MIME类型和客户在Accpet头中所指定的不兼容（HTTP 1.1新）。
-        * “407″ : Proxy Authentication Required（需要代理授权）类似于401，表示客户必须先经过代理服务器的授权。（HTTP 1.1新）
-        * “408″ : Request Time-out（请求超时）服务器等候请求时超时。（HTTP 1.1新）
-        * “409″ : Conflict（冲突）通常和PUT请求有关。由于请求和资源的当前状态相冲突，因此请求不能成功。（HTTP 1.1新）
-        * “410″ : Gone（已删除）如果请求的资源已被永久删除，那么，服务器会返回此响应。该代码与 404（未找到）代码类似，但在资源以前有但现在已经不复存在的情况下，有时会替代 404 代码出现。如果资源已被永久删除，那么，您应当使用 301 代码指定该资源的新位置。（HTTP 1.1新）
-        * “411″ : Length Required（需要有效长度）不会接受包含无效内容长度标头字段的请求。（HTTP 1.1新）
-        * “412″ : Precondition Failed（未满足前提条件）服务器未满足请求者在请求中设置的其中一个前提条件。（HTTP 1.1新）
-        * “413″ : Request Entity Too Large（请求实体过大）请求实体过大，已超出服务器的处理能力。如果服务器认为自己能够稍后再处理该请求，则应该提供一个Retry-After头。（HTTP 1.1新）
-        * “414″ : Request-URI Too Large（请求的 URI 过长）请求的 URI（通常为网址）过长，服务器无法进行处理。
-        * “415″ : Unsupported Media Type（不支持的媒体类型）请求的格式不受请求页面的支持。
-        * “416″ : Requested range not satisfiable（请求范围不符合要求）服务器不能满足客户在请求中指定的Range头。（HTTP 1.1新）
-        * “417″ : Expectation Failed（未满足期望值）服务器未满足”期望”请求标头字段的要求。
-        * “500″ : Internal Server Error（服务器内部错误）服务器遇到错误，无法完成请求。
-        * “501″ : Not Implemented（尚未实施） 服务器不具备完成请求的功能。例如，当服务器无法识别请求方法时，服务器可能会返回此代码。
-        * “502″ : Bad Gateway（错误网关）服务器作为网关或者代理时，为了完成请求访问下一个服务器，但该服务器返回了非法的应答。
-        * “503″ : Service Unavailable（服务不可用）服务器由于维护或者负载过重未能应答。通常，这只是一种暂时的状态。
-        * “504″ : Gateway Time-out（网关超时） 由作为代理或网关的服务器使用，表示不能及时地从远程服务器获得应答。（HTTP 1.1新）
-        * “505″ : HTTP Version not supported（HTTP 版本不受支持）不支持请求中所使用的 HTTP 协议版本。
-
 1. 如何阻止事件的冒泡?
 
     ```javascript
@@ -652,3 +610,112 @@
     |appMinorVersion|返回浏览器的次级版本|
     |appName|返回浏览器的名称|
     |appVersion|返回浏览器的平台和版本信息|
+
+1. 手写jsonp的实现  [参考自github上charleylla的部分代码](https://gist.github.com/charleylla/e44a0ce59accea062ebf357e55489f02)
+
+    ```javascript
+    (function (window, document) {
+        'use strict';
+        var jsonp = function (url, data, callback) {
+
+            //1 挂载回调函数
+            var fnSuffix = Math.random().toString().replace('.', '');
+            var cbFuncName = 'my_json_cb_' + fnSuffix;
+            //将函数挂载在全局环境的方式不推荐  使用cbs.my_json_cb_
+            window[cbFuncName] = callback;
+
+            //2 将data转化成url字符串的形式
+            // {id:1,name:'zhangsan'} =>id=1&name=zhangsan
+            var querystring = url.indexOf('?') == -1 ? '?' : '&';
+            for (var key in data) {
+                querystring += key + '=' + data[key] + '&';
+                //            id=          1   &
+            }
+            //querystring=?id=1&name=zhangsan&
+            //3 处理url地址中的回调参数
+            //url+=callback=sdfsfdg
+
+            querystring += 'callback=' + cbFuncName;
+            //querystring=?id=1&name=zhangsan&cb=my_json_cb_0231241
+            //4 创建一个script的标签
+            var scriptElement = document.createElement('script');
+            scriptElement.src = url + querystring;
+            // 此时还不能将其append到页面上
+
+            //5 将script标签放到页面中
+            document.body.appendChild(scriptElement);
+            //append过后页面会自动对这个地址发送请求，请求完成以后自动执行脚本
+
+        };
+
+        /*把jsonp放到全局*/
+        window.$jsonp = jsonp;
+
+    })(window, document);
+
+    /* 参考用例
+    (function(){
+        $jsonp(//地址
+                'http://api.douban.com/v2/movie/in_theaters',
+                //传递的参数
+                {
+                    count:10,start:5
+                },
+                //回调函数
+                function(data){
+                    console.log(data);
+                }
+        );
+    })();
+    */
+    ```
+
+1. http请求头，请求体，cookie在哪个里面？url在哪里面？
+
+    [相关介绍](https://github.com/seed-fe/blog/wiki/%E4%B8%83%E3%80%81%E7%BB%93%E5%90%88%E8%BF%99%E4%B8%AA%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0http%E5%8D%8F%E8%AE%AE)
+
+    * HTTP的请求报文分为三个部分--请求行,请求头和请求体
+        1. 请求行分为三个部分:请求方法,请求地址和协议及版本,以CRLF(rn)结束
+
+1. GET与POST的区别
+    1. GET请求是为了从服务器获取内容，在需要提交数据的情况下，提交的数据会作为querystring放在URL之后，以?分割URL和querystring，querystring也只是为了获取内容所发送的参数；POST请求是为了向服务器发送内容（比如表单），会把提交的数据放在HTTP包的request body中。
+    1. GET提交的数据大小有限制（因为浏览器对URL的长度有限制），而POST方法提交的数据没有限制。
+    1. 在express框架中，对于GET请求的参数'?xxxx=',使用req.query.xxxxx方法获得；对于POST请求的参数，使用req.body.xxxxx方法获得
+    1. GET方式提交数据，会带来安全问题，比如一个登录页面，通过GET方式提交数据时，用户名和密码将出现在URL上，如果页面可以被缓存或者其他人可以访问这台机器，就可以从历史记录获得该用户的账号和密码。
+
+
+1. HTTP协议的状态消息都有哪些?(如200、302对应的描述)
+
+    状态码主要用来表示响应的状态，根据状态码可以判断响应是否如预期。
+
+    HTTP/1.1中定义了5类状态码， 状态码由三位数字组成，第一个数字定义了响应的类别
+
+    * 1XX 提示信息类 - 表示请求已被成功接收，继续处理
+
+    * 2XX 响应成功类 - 表示请求已被成功接收，理解，接受
+
+    * 3XX 重定向类 - 要完成请求必须进行更进一步的处理
+
+    * 4XX 客户端错误类 - 请求有语法错误或请求无法实现
+
+    * 5XX 服务器端错误类 - 服务器未能实现合法的请求
+
+    状态码有很多，不过一开始只需要掌握一些比较常见的：
+
+    * 200 ok： 最常见的就是成功响应状态码200了， 这表明该请求被成功地完成，所请求的资源发送回客户端。上面打开项目主页的实例中就是200
+    * 304 not modified： 假如我们打开主页后在浏览器中刷新，就会看到响应的状态码变成了304，这代表之前响应的html文档已经被缓存了，服务器端相同的文档没有变化，可以继续使用缓存的文档，因此304响应没有response body部分
+    * 302 found： 重定向，新的URL会在response header中的Location中返回，浏览器将会自动使用新的URL发出新的Request，假如我们在登录页提交登录表单发送一个POST请求进行登录，就会得到一个302响应并且重定向到/index路径下
+    * 404 not found: 请求资源不存在（输错了URL，或者服务器端现在没有这个页面了）
+    * 500 Internal Server Error： 服务器发生了不可预期的错误，这个一般在会在服务器的程序码出错时发生
+
+1. OSI七层模型
+
+    | OSI中的层 | 功能 | TCP/IP协议族 | 相应措施 |
+    |:--------- |:---- |:----------- |:---- |
+    |应用层| 文件传输，电子邮件，文件服务，虚拟终端 |TFTP，HTTP，SNMP，FTP，SMTP，DNS，Telnet|  |
+    表示层| 数据格式化，代码转换，数据加密| 没有协议 | Linux应用命令测试 |
+    会话层| 解除或建立与别的接点的联系| 没有协议 |   |
+    传输层| 提供端对端的接口 | TCP，UDP| TCP,UDP协议分析 |
+    网络层| 为数据包选择路由 | IP，ICMP，RIP，OSPF，BGP，IGMP| 检查IP地址,路由设置 |
+    数据链路层| 传输有地址的帧以及错误检测功能 | SLIP，CSLIP，PPP，ARP，RARP，MTU| ARP地址检测,物理连接测试 |
+    物理层| 以二进制数据形式在物理媒体上传输数据| ISO2110，IEEE802，IEEE802.2|  |
