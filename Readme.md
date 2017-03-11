@@ -1090,3 +1090,52 @@
 1. 前端路由?前后端路由的区别?
 
     区别在于express是服务器端的路由，也就是说需要向后台服务器发送请求，然后服务器来决定来render那个.html，这也就是最早的mvc架构模式，而前端的路由是将这一过程放在浏览器端，也就是前台写js代码控制，不在请求服务器，前台一般利用histroy和hash来控制，达到不刷新页面可以使显示内容发生变化，这样好处是js代码不发生变化(浏览器端可以维护一个稳定的model)；一般单页应用就是前台来控制路由，这样速度更快，用户体验更好。单页应用还将模板拿到了浏览器端，从而解放了服务端，服务端趋于服务化。
+
+1. 原生JS实现鼠标拖拽
+
+    ```javascript
+    function drag(elementId) {
+        var element = document.getElementById(elementId);
+        var position = {
+            offsetX: 0, //点击处偏移元素的X
+            offsetY: 0, //偏移Y值
+            state: 0 //是否正处于拖拽状态，1表示正在拖拽，0表示释放
+        };
+
+        //获得兼容的event对象
+        function getEvent(event) {
+            return event || window.event;
+        }
+
+        //元素被鼠标拖住
+        element.addEventListener('mousedown', function (event) {
+
+            //获得偏移的位置以及更改状态
+            var e = getEvent(event);
+            position.offsetX = e.offsetX;
+            position.offsetY = e.offsetY;
+            position.state = 1;
+        }, false);
+
+        //元素移动过程中
+        document.addEventListener('mousemove', function (event) {
+
+            var e = getEvent(event);
+            if (position.state) {
+                position.endX = e.clientX;
+                position.endY = e.clientY;
+                //设置绝对位置在文档中，鼠标当前位置-开始拖拽时的偏移位置
+                element.style.position = 'absolute';
+                element.style.top = position.endY - position.offsetY + 'px';
+                element.style.left = position.endX - position.offsetX + 'px';
+            }
+        }, false);
+
+        //释放拖拽状态
+        element.addEventListener('mouseup', function (event) {
+            position.state = 0;
+        }, false);
+    }
+
+    drag('box');
+    ```
