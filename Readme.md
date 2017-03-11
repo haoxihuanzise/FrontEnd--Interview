@@ -96,7 +96,7 @@
     1. 属性和方法被加入到this引用的对象中
     1. 新创建的对象由this所引用，并且最后隐式的返回this
 
-1. 如何创建一个ajax？(总共有8种callback , `onSuccess` , `onFailure` , `onUninitialized` , `onLoading` , `onLoaded` , `onInteractive` , `onComplete` , `onException`)
+1. 如何创建一个ajax？(总共有8种callback , `onSuccess` , `onFailure` , `onUninitialized` , `onLoading` , `onLoaded` , `onInteractive` , `onComplete` , `onException`)实例化，open，send,onreadystatechange，然后是req,readyState和status。原生ajax的四个过程。实例化，open，send,onreadystatechange，然后是req,readyState和status。那么问题是通过哪个属性得到data？jquery里是success回调里面的形参。responseText和responseXML。后者是XML解析了的。
     1. 创建XMLHttpRequest对象,也就是创建一个异步调用对象
     1. 创建一个新的HTTP请求,并指定该HTTP请求的方法、URL及验证信息
     1. 设置响应HTTP请求状态变化的函数
@@ -137,6 +137,38 @@
             }
         }
     };
+    ```
+    用promise手写ajax. [详细说明](https://johanzhu.github.io/2016/10/23/19/)
+
+    ```javascript
+    var getJSON = function (url) {
+        var promise = new Promise(function (resolve, reject) {
+            var client = new XMLHttpRequest();
+            client.open("GET", url);
+            client.onreadystatechange = handler;
+            client.responseType = "json";
+            client.setRequestHeader("Accept", "application/json");
+            client.send();
+
+            function handler() {
+                if (this.readyState !== 4) {
+                    return;
+                }
+                if (this.status === 200) {
+                    resolve(this.response);
+                } else {
+                    reject(new Error(this.statusText));
+                }
+            };
+        });
+        return promise;
+    };
+
+    getJSON("/posts.json").then(function (json) {
+        console.log('Contents: ' + json);
+    }, function (error) {
+        console.error('出错了', error);
+    });
     ```
 
 1. ES6怎么写class，为何会出现class？
@@ -670,6 +702,39 @@
     */
     ```
 
+1. document.domain+iframe的设置
+
+    对于主域相同而子域不同的例子，可以通过设置document.domain的办法来解决。具体的做法是可以在`http://www.a.com/a.html`和`http://script.a.com/b.html`两个文件中分别加上document.domain = ‘a.com’；然后通过a.html文件中创建一个iframe，去控制iframe的contentDocument，这样两个js文件之间就可以“交互”了。当然这种办法只能解决主域相同而二级域名不同的情况，如果你异想天开的把script.a.com的domian设为alibaba.com那显然是会报错地！代码如下：
+
+    www.a.com上的a.html
+    ```javascript
+    document.domain = 'a.com';
+    var ifr = document.createElement('iframe');
+    ifr.src = 'http://script.a.com/b.html';
+    ifr.style.display = 'none';
+    document.body.appendChild(ifr);
+    ifr.onload = function(){
+        var doc = ifr.contentDocument || ifr.contentWindow.document;
+        // 在这里操纵b.html
+        alert(doc.getElementsByTagName("h1")[0].childNodes[0].nodeValue);
+    };
+    ```
+
+    script.a.com上的b.html
+    ```javscript
+    document.domain = 'a.com';
+    ```
+
+    这种方式适用于{www.kuqin.com, kuqin.com, script.kuqin.com, css.kuqin.com}中的任何页面相互通信。
+
+    备注：某一页面的domain默认等于window.location.hostname。主域名是不带www的域名，例如a.com，主域名前面带前缀的通常都为二级域名或多级域名，例如www.a.com其实是二级域名。 domain只能设置为主域名，不可以在b.a.com中将domain设置为c.a.com。
+
+    问题：
+
+    1、安全性，当一个站点（b.a.com）被攻击后，另一个站点（c.a.com）会引起安全漏洞。
+
+    2、如果一个页面中引入多个iframe，要想能够操作所有iframe，必须都得设置相同domain。
+
 1. http请求头，请求体，cookie在哪个里面？url在哪里面？
 
     [相关介绍](https://github.com/seed-fe/blog/wiki/%E4%B8%83%E3%80%81%E7%BB%93%E5%90%88%E8%BF%99%E4%B8%AA%E9%A1%B9%E7%9B%AE%E5%AD%A6%E4%B9%A0http%E5%8D%8F%E8%AE%AE)
@@ -708,7 +773,7 @@
     * 404 not found: 请求资源不存在（输错了URL，或者服务器端现在没有这个页面了）
     * 500 Internal Server Error： 服务器发生了不可预期的错误，这个一般在会在服务器的程序码出错时发生
 
-1. OSI七层模型
+1. OSI七层模型 && TCP/IP五层模型的协议
 
     | OSI中的层 | 功能 | TCP/IP协议族 | 相应措施 |
     |:--------- |:---- |:----------- |:---- |
@@ -719,3 +784,309 @@
     网络层| 为数据包选择路由 | IP，ICMP，RIP，OSPF，BGP，IGMP| 检查IP地址,路由设置 |
     数据链路层| 传输有地址的帧以及错误检测功能 | SLIP，CSLIP，PPP，ARP，RARP，MTU| ARP地址检测,物理连接测试 |
     物理层| 以二进制数据形式在物理媒体上传输数据| ISO2110，IEEE802，IEEE802.2|  |
+
+    | TCP/IP层 | 网络设备 |
+    |:-------- |:------- |
+    | 应用层 |   |
+    | 传输层 | 四层交换机、也有工作在四层的路由器 |
+    | 网络层 | 路由器、三层交换机 |
+    | 物理层 | 中继器、集线器、还有我们通常说的双绞线也工作在物理层 |
+    | 数据链路层 | 网桥（现已很少使用）、以太网交换机（二层交换机）、网卡（其实网卡是一半工作在物理层、一半工作在数据链路层） |
+
+    ```css
+    TCP (Transmission Control Protocol)和UDP(User Datagram Protocol)协议属于传输层协议。其中TCP提供IP环境下的数据可靠传输，它提供的服务包括数据流传送、可靠性、有效流控、全双工操作和多路复 用。通过面向连接、端到端和可靠的数据包发送。通俗说，它是事先为所发送的数据开辟出连接好的通道，然后再进行数据发送；而UDP则不为IP提供可靠性、 流控或差错恢复功能。一般来说，TCP对应的是可靠性要求高的应用，而UDP对应的则是可靠性要求低、传输经济的应用。TCP支持的应用协议主要 有：Telnet、FTP、SMTP等；UDP支持的应用层协议主要有：NFS（网络文件系统）、SNMP（简单网络管理协议）、DNS（主域名称系 统）、TFTP（通用文件传输协议）等.
+    TCP/IP协议与低层的数据链路层和物理层无关，这也是TCP/IP的重要特点
+    OSI是Open System Interconnect的缩写，意为开放式系统互联。
+    OSI七层参考模型的各个层次的划分遵循下列原则：
+    1、同一层中的各网络节点都有相同的层次结构，具有同样的功能。
+    2、同一节点内相邻层之间通过接口（可以是逻辑接口）进行通信。
+    3、七层结构中的每一层使用下一层提供的服务，并且向其上层提供服务。
+    4、不同节点的同等层按照协议实现对等层之间的通信。
+
+    第一层：物理层（PhysicalLayer)，
+    规定通信设备的机械的、电气的、功能的和过程的特性，用以建立、维护和拆除物理链路连接。具体地讲，机械 特性规定了网络连接时所需接插件的规格尺寸、引脚数量和排列情况等；电气特性规定了在物理连接上传输bit流时线路上信号电平的大小、阻抗匹配、传输速率 距离限制等；功能特性是指对各个信号先分配确切的信号含义，即定义了DTE和DCE之间各个线路的功能；规程特性定义了利用信号线进行bit流传输的一组 操作规程，是指在物理连接的建立、维护、交换信息是，DTE和DCE双放在各电路上的动作系列。在这一层，数据的单位称为比特（bit）。属于物理层定义的典型规范代表包括：EIA/TIA RS-232、EIA/TIA RS-449、V.35、RJ-45等。
+
+    第二层：数据链路层（DataLinkLayer):
+    在物理层提供比特流服务的基础上，建立相邻结点之间的数据链路，通过差错控制提供数据帧（Frame）在信道上无差错的传输，并进行各电路上的动作系列。数据链路层在不可靠的物理介质上提供可靠的传输。该层的作用包括：物理地址寻址、数据的成帧、流量控制、数据的检错、重发等。在这一层，数据的单位称为帧（frame）。数据链路层协议的代表包括：SDLC、HDLC、PPP、STP、帧中继等。
+
+    第三层是网络层
+    在 计算机网络中进行通信的两个计算机之间可能会经过很多个数据链路，也可能还要经过很多通信子网。网络层的任务就是选择合适的网间路由和交换结点， 确保数据及时传送。网络层将数据链路层提供的帧组成数据包，包中封装有网络层包头，其中含有逻辑地址信息- -源站点和目的站点地址的网络地址。如 果你在谈论一个IP地址，那么你是在处理第3层的问题，这是“数据包”问题，而不是第2层的“帧”。IP是第3层问题的一部分，此外还有一些路由协议和地 址解析协议（ARP）。有关路由的一切事情都在这第3层处理。地址解析和路由是3层的重要目的。网络层还可以实现拥塞控制、网际互连等功能。在这一层，数据的单位称为数据包（packet）。网络层协议的代表包括：IP、IPX、RIP、OSPF等。
+
+    第 四层是处理信息的传输层
+    第4层的数据单元也称作数据包（packets）。但是，当你谈论TCP等具体的协议时又有特殊的叫法，TCP的数据单元称为段 （segments）而UDP协议的数据单元称为“数据报（datagrams）”。这个层负责获取全部信息，因此，它必须跟踪数据单元碎片、乱序到达的 数据包和其它在传输过程中可能发生的危险。第4层为上层提供端到端（最终用户到最终用户）的透明的、可靠的数据传输服务。所为透明的传输是指在通信过程中 传输层对上层屏蔽了通信传输系统的具体细节。传输层协议的代表包括：TCP、UDP、SPX等。
+
+    第五层是会话层
+    这一层也可以称为会晤层或对话层，在会话层及以上的高层次中，数据传送的单位不再另外命名，而是统称为报文。会话层不参与具体的传输，它提供包括访问验证和会话管理在内的建立和维护应用之间通信的机制。如服务器验证用户登录便是由会话层完成的。
+
+    第六层是表示层
+    这一层主要解决拥护信息的语法表示问题。它将欲交换的数据从适合于某一用户的抽象语法，转换为适合于OSI系统内部使用的传送语法。即提供格式化的表示和转换数据服务。数据的压缩和解压缩， 加密和解密等工作都由表示层负责。
+
+    第七层应用层
+    应用层为操作系统或网络应用程序提供访问网络服务的接口。应用层协议的代表包括：Telnet、FTP、HTTP、SNMP等。
+
+    除了层的数量之外，开放式系统互联（OSI）模型与TCP/IP协议有什么区别？
+
+    开放式系统互联模型是一个参考标准，解释协议相互之间应该如何相互作用。TCP/IP协议是美国国防部发明的，是让互联网成为了目前这个样子的标准之一。开放式系统互联模型中没有清楚地描绘TCP/IP协议，但是在解释TCP/IP协议时很容易想到开放式系统互联模型。两者的主要区别如下：
+
+    TCP/IP协议中的应用层处理开放式系统互联模型中的第五层、第六层和第七层的功能。
+
+    TCP/IP协议中的传输层并不能总是保证在传输层可靠地传输数据包，而开放式系统互联模型可以做到。TCP/IP协议还提供一项名为UDP（用户数据报协议）的选择。UDP不能保证可靠的数据包传输。
+
+    TCP/UDP协议
+
+    TCP(Transmission Control Protocol)和UDP(User Datagram Protocol)协议属于传输层协议。其中TCP提供IP环境下的数据可靠传输，它提供的服务包括数据流传送、可靠性、有效流控、全双工操作和多路复用。通过面向连接、端到端和可靠的数据包发送。通俗说，它是事先为所发送的数据开辟出连接好的通道，然后再进行数据发送；而UDP则不为IP提供可靠性、流控或差错恢复功能。一般来说，TCP对应的是可靠性要求高的应用，而UDP对应的则是可靠性要求低、传输经济的应用。
+
+    TCP支持的应用协议主要有：Telnet、FTP、SMTP等；UDP支持的应用层协议主要有：NFS（网络文件系统）、SNMP（简单网络管理协议）、DNS（主域名称系统）、TFTP（通用文件传输协议）等。
+
+    TCP/IP协议与低层的数据链路层和物理层无关，这也是TCP/IP的重要特点。
+
+    OSI是Open System Interconnect的缩写，意为开放式系统互联。
+    ```
+
+1. 解释平衡二叉树，以及在数据结构中的应用（红黑树）
+
+    平衡二叉树（Balanced Binary Tree）又被称为AVL树（有别于AVL算法），且具有以下性质：它是一棵空树或它的左右两个子树的高度差的绝对值不超过1，并且左右两个子树都是一棵平衡二叉树。
+
+    红黑树（英语：Red–black tree）是一种自平衡二叉查找树，是在计算机科学中用到的一种数据结构，典型的用途是实现关联数组。
+
+    数据结构中的应用:
+    * 红黑树和AVL树一样都对插入时间、删除时间和查找时间提供了最好可能的最坏情况担保。这不只是使它们在时间敏感的应用如实时应用（real time application）中有价值，而且使它们有在提供最坏情况担保的其他数据结构中作为建造板块的价值；例如，在计算几何中使用的很多数据结构都可以基于红黑树。
+    * 红黑树在函数式编程中也特别有用，在这里它们是最常用的持久数据结构（persistent data structure）之一，它们用来构造关联数组和集合，每次插入、删除之后它们能保持为以前的版本。除了O(log n)的时间之外，红黑树的持久版本对每次插入或删除需要O(log n)的空间。
+    * 红黑树是2-3-4树的一种等同。换句话说，对于每个2-3-4树，都存在至少一个数据元素是同样次序的红黑树。在2-3-4树上的插入和删除操作也等同于在红黑树中颜色翻转和旋转。这使得2-3-4树成为理解红黑树背后的逻辑的重要工具，这也是很多介绍算法的教科书在红黑树之前介绍2-3-4树的原因，尽管2-3-4树在实践中不经常使用。
+    * 红黑树相对于AVL树来说，牺牲了部分平衡性以换取插入/删除操作时少量的旋转操作，整体来说性能要优于AVL树。
+    性质[编辑]
+
+1. css3旋转,动画
+
+    ```css
+    div.carset{
+        width:0;
+        height:0;
+        border-width:20px;
+        border-style:solid;
+        border-color:transparent;
+        border-top-color:#666;
+        animation: animationName 5s infinite;
+    }
+    @keyframes animationName{
+        from{
+            transform:rotate(0deg)
+        }to{
+            transform:rotate(360deg)
+        }
+    }
+    ```
+
+1. 移动端适配问题
+
+    ```css
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scable=no">
+    ```
+    * initial-scale设置页面的初始缩放程度 和布局视口的宽度
+    * minimum-scale允许用户的最小缩放程度，为一个数字，可以带小数
+    * maximum-scale允许用户的最大缩放值，为一个数字，可以带小数
+    * user-scalable是否允许用户进行缩放，值为"no"或"yes", no 代表不允许，yes代表允许
+    * width=device-width : 在safari中，当设置initial-scale= 1 时，理想视口的尺寸会随着屏幕的旋转改变。在竖屏时，布局视口的宽度是320px ,横屏下，是480px 或者568px.但在ie10中却有完全相反的问题.initial-scale = 1  时，在横屏模式下宽度也保持为320px ,但width = device-width 时，它会从320px变为480px.
+
+1. Http/2
+
+    （超文本传输协议第2版，最初命名为HTTP 2.0），是HTTP协议的的第二个主要版本，使用于万维网。HTTP/2的目标包括异步连接复用，头压缩和请求反馈管线化并保留与HTTP 1.1的完全语义兼容。
+
+1. 使用原生JS来操作Cookie
+
+    ```javscript
+    //写cookies
+
+    function setCookie(name,value)
+    {
+        var Days = 30;
+        var exp = new Date();
+        exp.setTime(exp.getTime() + Days*24*60*60*1000);
+        document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+    }
+
+    //读取cookies
+    function getCookie(name)
+    {
+        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+        if(arr=document.cookie.match(reg))
+            return unescape(arr[2]);
+        else
+            return null;
+    }
+
+    //删除cookies
+    function delCookie(name)
+    {
+        var exp = new Date();
+        exp.setTime(exp.getTime() - 1);
+        var cval=getCookie(name);
+        if(cval!=null)
+            document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+    }
+    //使用示例
+    setCookie("name","hayden");
+    alert(getCookie("name"));
+
+    //如果需要设定自定义过期时间
+    //那么把上面的setCookie　函数换成下面两个函数就ok;
+
+
+    //程序代码
+    function setCookie(name,value,time)
+    {
+        var strsec = getsec(time);
+        var exp = new Date();
+        exp.setTime(exp.getTime() + strsec*1);
+        document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+    }
+    function getsec(str)
+    {
+        alert(str);
+        var str1=str.substring(1,str.length)*1;
+        var str2=str.substring(0,1);
+        if (str2=="s"){
+            return str1*1000;
+        }else if (str2=="h"){
+            return str1*60*60*1000;
+        }else if (str2=="d"){
+            return str1*24*60*60*1000;
+        }
+    }
+    //这是有设定过期时间的使用示例：
+    //s20是代表20秒
+    //h是指小时，如12小时则是：h12
+    //d是天数，30天则：d30
+
+    setCookie("name","hayden","s20");
+    ```
+
+1. DOM事件流的三个阶段 ( 事件捕获阶段 , 处于目标阶段 , 事件冒泡阶段 )
+
+    [理解DOM事件流的三个阶段](https://segmentfault.com/a/1190000004463384)
+
+    注意: 在 target phase，event handler 被调用的顺序不再遵循先捕获，后冒泡的原则，而是严格按照 event handler 注册的顺序,即给btn同时绑定冒泡和捕获事件,谁先执行,谁就先触发,不一定是先捕获在冒泡
+
+1. 前端攻防(主要是CSRF和XSS)&emsp;[了解更多](https://zhuanlan.zhihu.com/p/25486768?group_id=820705780520079360)
+    * CSRF : 中文名,跨站请求伪造。可以简单理解为,攻击者盗用了你的身份，以你的名义发送恶意请求，容易造成个人隐私泄露以及财产安全。要完成一次 CSRF 攻击，受害者必须完成：
+        * 登录受信任网站，并在本地生成 cookie
+        * 在不登出 A 的情况下，访问危险网站 B
+
+        防御手段 : 现在一般都在服务端进行防御
+        * 关键操作只接受POST请求
+        * 验证码
+        * 检测Referer
+        * Token(目前主流做法)
+            * Token 要足够随机，使攻击者无法准确预测
+            * Token 是一次性的，即每次请求成功后要更新 Token，增加预测难度
+            * Token 要主要保密性，敏感操作使用 POST，防止 Token 出现在 URL 中
+
+    * XSS : 全称为 Cross-site script，跨站脚本攻击，为了和 CSS 层叠样式表区分所以取名为 XSS，是 Web 程序中常见的漏洞。其原理是攻击者向有 XSS 漏洞的网站中输入恶意的 HTML 代码，当其它用户浏览该网站时候，该段 HTML 代码会自动执行，从而达到攻击的目的，如盗取用户的 Cookie，破坏页面结构，重定向到其它网站等。
+        * 持久型 XSS 就是对客户端攻击的脚本植入到服务器上，从而导致每个正常访问到的用户都会遭到这段 XSS 脚本的攻击。(如上述的留言评论功能)
+        * 非持久型 XSS 是对一个页面的 URL 中的某个参数做文章，把精心构造好的恶意脚本包装在 URL 参数重，再将这个 URL 发布到网上，骗取用户访问，从而进行攻击
+
+        防御 XSS 攻击最简单直接的方法就是过滤用户的输入.
+        * 如果不需要用户输入 HTML，可以直接对用户的输入进行 HTML 转义
+        * 当用户需要输入 HTML 代码时：将用户的输入使用 HTML 解析库进行解析，获取其中的数据。然后根据用户原有的标签属性，重新构建 HTML 元素树。构建的过程中，所有的标签、属性都只从白名单中拿取。
+
+1. 实现事件代理
+
+    实现原理是利用了浏览器的事件冒泡和事件源（target）
+
+    例如给一个`table`的`td`加一个单击事件,但是如果表格1000行,就得绑定1000次,所以,可以使用`bind`等函数奖`click`绑定到了`table`上,从而实现事件代理.
+
+    ```javascript
+    $("#tab td").click(function () {
+        $(this).css("background", "red");
+    });
+    //事件代理后
+    $("#tab").bind("click", function (ev) {
+        var $obj = $(ev.target);
+        $obj.css("background", "red");
+    })
+    ```
+
+    原生JS实现,注意子元素传递上来的应该是event.target或者e.srcElement。这个强调下IE和W3C的区别，建议写一个封装。
+
+    ```javascript
+    // ============ 简单的事件委托
+    function delegateEvent(interfaceEle, selector, type, fn) {
+        if (interfaceEle.addEventListener) {
+            interfaceEle.addEventListener(type, eventfn);
+        } else {
+            interfaceEle.attachEvent("on" + type, eventfn);
+        }
+
+        function eventfn(e) {
+            var e = e || window.event;
+            var target = e.target || e.srcElement;
+            if (matchSelector(target, selector)) {
+                if (fn) {
+                    fn.call(target, e);
+                }
+            }
+        }
+    }
+    /**
+    * only support #id, tagName, .className
+    * and it's simple single, no combination
+    */
+    function matchSelector(ele, selector) {
+        // if use id
+        if (selector.charAt(0) === "#") {
+            return ele.id === selector.slice(1);
+        }
+        // if use class
+        if (selector.charAt(0) === ".") {
+            return (" " + ele.className + " ").indexOf(" " + selector.slice(1) + " ") != -1;
+        }
+        // if use tagName
+        return ele.tagName.toLowerCase() === selector.toLowerCase();
+    }
+    //调用
+    var odiv = document.getElementById("oDiv");
+    delegateEvent(odiv, "a", "click", function () {
+        alert("1");
+    })
+    ```
+
+1. js的原型继承与类继承&emsp;(原型继承比较好,类继承只继承了实例属性，没有原型属性。原型链继承可以继承所有。)
+
+    ```javascript
+    //类继承
+    var father = function () {
+        this.age = 52;
+        this.say = function () {
+            alert('hello i am ' + this.name + ' and i am ' + this.age + 'years old');
+        }
+    }
+
+    var child = function () {
+        this.name = 'bill';
+        father.call(this);
+    }
+
+    var man = new child();
+    man.say();
+
+    //原型继承
+    var father = function () {}
+
+    father.prototype.a = function () {}
+    var child = function () {}
+
+    child.prototype = new father();
+
+    var man = new child();
+
+    man.a();
+    ```
+
+1. 用apply和call怎么继承原型链上的共享属性？通过空函数传值。新建一个空函数C。C实例化后C的实例属性就是空，然后用B的apply/call去继承C，相当于继承了C的实例属性。[详细说明](https://segmentfault.com/a/1190000007801452)
+
+
+1. 网络分层结构。4层，应用层，传输层，网络层和数据链路层。依次是http等应用，TCP/UDP，IP和物理连接。然后又追问了一下ssl在哪一层。ssl是socket，是单独的一层。如果要算应该算传输层。
+
+1. 前端路由?前后端路由的区别?
+
+    区别在于express是服务器端的路由，也就是说需要向后台服务器发送请求，然后服务器来决定来render那个.html，这也就是最早的mvc架构模式，而前端的路由是将这一过程放在浏览器端，也就是前台写js代码控制，不在请求服务器，前台一般利用histroy和hash来控制，达到不刷新页面可以使显示内容发生变化，这样好处是js代码不发生变化(浏览器端可以维护一个稳定的model)；一般单页应用就是前台来控制路由，这样速度更快，用户体验更好。单页应用还将模板拿到了浏览器端，从而解放了服务端，服务端趋于服务化。
