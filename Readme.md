@@ -1196,3 +1196,24 @@
     })
     ```
 
+1. 一边定宽一边自适应flex布局
+
+    ```html
+    <div class="parent">
+        <div class="left">左列</div>
+        <div class="right">右列</div>
+    </div>
+
+    <style>
+        .parent {
+            display: flex;
+        }
+        .left {
+            width: 100px;
+        }
+        .right {
+            flex: 1;
+        }
+    </style>
+    ```
+
