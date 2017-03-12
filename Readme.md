@@ -30,6 +30,38 @@
     alert(demo.name); //得到被继承的属性
     ```
 
+1. js的原型继承与类继承&emsp;(原型继承比较好,类继承只继承了实例属性，没有原型属性。原型链继承可以继承所有。)
+
+    ```javascript
+    //类继承
+    var father = function () {
+        this.age = 52;
+        this.say = function () {
+            alert('hello i am ' + this.name + ' and i am ' + this.age + 'years old');
+        }
+    }
+
+    var child = function () {
+        this.name = 'bill';
+        father.call(this);
+    }
+
+    var man = new child();
+    man.say();
+
+    //原型继承
+    var father = function () {}
+
+    father.prototype.a = function () {}
+    var child = function () {}
+
+    child.prototype = new father();
+
+    var man = new child();
+
+    man.a();
+    ```
+
 1. javascript有哪几种创建对象的方式？
 
     ```javascript
@@ -1048,38 +1080,6 @@
     delegateEvent(odiv, "a", "click", function () {
         alert("1");
     })
-    ```
-
-1. js的原型继承与类继承&emsp;(原型继承比较好,类继承只继承了实例属性，没有原型属性。原型链继承可以继承所有。)
-
-    ```javascript
-    //类继承
-    var father = function () {
-        this.age = 52;
-        this.say = function () {
-            alert('hello i am ' + this.name + ' and i am ' + this.age + 'years old');
-        }
-    }
-
-    var child = function () {
-        this.name = 'bill';
-        father.call(this);
-    }
-
-    var man = new child();
-    man.say();
-
-    //原型继承
-    var father = function () {}
-
-    father.prototype.a = function () {}
-    var child = function () {}
-
-    child.prototype = new father();
-
-    var man = new child();
-
-    man.a();
     ```
 
 1. 用apply和call怎么继承原型链上的共享属性？通过空函数传值。新建一个空函数C。C实例化后C的实例属性就是空，然后用B的apply/call去继承C，相当于继承了C的实例属性。[详细说明](https://segmentfault.com/a/1190000007801452)
