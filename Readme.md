@@ -218,7 +218,7 @@
     }
     ```
 
-1. 异步加载JS的方式有哪些？
+1. 异步加载JS的方式有哪些？&emsp;[defer与async的区别](https://segmentfault.com/q/1010000000640869)
     1. defer，只支持 IE
     1. async
     1. 创建 script，插入到 DOM 中，加载完毕后 callBack
@@ -274,6 +274,7 @@
         return JSON.parse(array)
     }
     //然后调用:
+    //格式规范 : JSON.parse('{"name":[1,2,3]}')
     $("").stringifyArray(array)
     ```
 
@@ -614,7 +615,7 @@
     ```css
     （1）IE下，可以使用获取常规属性的方法来获取自定义属性，也可以使用getAttribute()获取自定义属性；
     （2）Firefox下，只能使用getAttribute()获取自定义属性。解决方法：统一通过getAttribute()获取自定义属性。
-    （3）IE下，even对象有x,y属性，但是没有pageX,pageY属性；
+    （3）IE下，event对象有x,y属性，但是没有pageX,pageY属性；
     （4）Firefox下，event对象有pageX,pageY属性，但是没有x,y属性。解决方法是条件注释，缺点是在IE浏览器下可能会增加额外的HTTP请求数。
     （5）Chrome 中文界面下默认会将小于12px的文本强制按照12px显示，可通过加入 CSS属性-webkit-text-size-adjust: none;来解决。
     （6）超链接访问过后hover样式就不出现了 被点击访问过的超链接样式不再具有hover和active了，解决方法是改变CSS属性的排列顺序：
@@ -640,7 +641,7 @@
     Less一种动态样式语言. 将CSS赋予了动态语言的特性，如变量，继承，运算， 函数. LESS 既可以在客户端上运行 (支持IE 6+, Webkit, Firefox)，也可一在服务端运行 (借助 Node.js)。
     区别：
     (1))Sass是基于Ruby的，是在服务端处理的，而Less是需要引入less.js来处理Less代码输出Css到浏览器，也可以在开发环节使用Less，然后编译成Css文件，直接放到项目中，也有Less.app、SimpleLess、CodeKit.app这样的工具，也有在线编译地址。
-    (2)变量符不一样，less是@，而Scss是$，而且变量的作用域也不一样，后面会讲到。
+    (2)变量符不一样，less是@，而Scss是$，而且变量的作用域也不一样。
     (3)输出设置，Less没有输出设置，Sass提供4中输出选项：nested, compact, compressed 和 expanded。
     (4)Sass支持条件语句，可以使用if{}else{},for{}循环等等。而Less不支持。
     ```
@@ -655,8 +656,8 @@
 
 1. 如何让chrome盒模型(w3c标准盒模型)显示的和IE的一致?
 
-    1. 标准浏览器盒子模型的宽度 = width + padding-left + padding-right + border-left + border-right + margin-left + margin-right
-    1. IE浏览器(6-8)盒子模型的宽度 = width + margin-left + margin-right
+    * 标准浏览器盒子模型的宽度 = width + padding-left + padding-right + border-left + border-right + margin-left + margin-right
+    * IE浏览器(6-8)盒子模型的宽度 = width + margin-left + margin-right
 
     方法 : `display:border-box;`
 
@@ -738,7 +739,7 @@
 
     对于主域相同而子域不同的例子，可以通过设置document.domain的办法来解决。具体的做法是可以在`http://www.a.com/a.html`和`http://script.a.com/b.html`两个文件中分别加上document.domain = ‘a.com’；然后通过a.html文件中创建一个iframe，去控制iframe的contentDocument，这样两个js文件之间就可以“交互”了。当然这种办法只能解决主域相同而二级域名不同的情况，如果你异想天开的把script.a.com的domian设为alibaba.com那显然是会报错地！代码如下：
 
-    www.a.com上的a.html
+    `www.a.com`上的`a.html`
     ```javascript
     document.domain = 'a.com';
     var ifr = document.createElement('iframe');
@@ -874,6 +875,8 @@
 
     OSI是Open System Interconnect的缩写，意为开放式系统互联。
     ```
+
+1. 网络分层结构。4层，应用层，传输层，网络层和数据链路层。依次是http等应用，TCP/UDP，IP和物理连接。然后又追问了一下ssl在哪一层。ssl是socket，是单独的一层。如果要算应该算传输层。
 
 1. 解释平衡二叉树，以及在数据结构中的应用（红黑树）
 
@@ -1085,7 +1088,6 @@
 1. 用apply和call怎么继承原型链上的共享属性？通过空函数传值。新建一个空函数C。C实例化后C的实例属性就是空，然后用B的apply/call去继承C，相当于继承了C的实例属性。[详细说明](https://segmentfault.com/a/1190000007801452)
 
 
-1. 网络分层结构。4层，应用层，传输层，网络层和数据链路层。依次是http等应用，TCP/UDP，IP和物理连接。然后又追问了一下ssl在哪一层。ssl是socket，是单独的一层。如果要算应该算传输层。
 
 1. 前端路由?前后端路由的区别?
 
