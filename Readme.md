@@ -1139,3 +1139,51 @@
 
     drag('box');
     ```
+
+1. 自己项目中写的比较好的代码
+
+    ```javascript
+    //搜索框等待用户停止输入后再发送请求
+    input.on("input propertychange", function (event) {
+        if (input.val().trim() == "") {
+            input_icon.attr("xlink:href", "#icon-sousuo-sousuo");
+            search_list.hide();
+        } else {
+            input_icon.attr("xlink:href", "#icon-cha");
+            search_list.show();
+            /!*初始化当前页数*!/
+            search_list_footer.attr("data-current-page", "1");
+            /!*用户停止输入一段时间后进行事件触发*!/
+            last = event.timeStamp;
+            clearTimeout();
+            setTimeout(function () {
+                if (last - event.timeStamp == 0) {
+                    //进行请求
+                    searchWxAccountList(search_url);
+                }
+            }, 800);
+        }
+    })
+    //点击div以外的区域gaidiv消失
+    $(document).on("click", function (e) {
+        var target = $(e.target);
+        if (target.closest(".search_list").length == 0) {
+            input.val("");
+            search_list.hide();
+            search_list_footer.hide();
+            search_list.children(".search_list_body").empty();
+            input_icon.attr("xlink:href", "#icon-sousuo-sousuo");
+        }
+    })
+    document.addEventListener('click', function (e) {
+        var target = e.target;
+        if (!target.closest('.search_list')) {
+            input.value = '';
+            search_list.style.display = 'none';
+            search_list_footer.style.display = 'none';
+            search_list.querySelector('.search_list_body').innerHTML = '';
+            input_icon.setAttribute('xlink:href', '#icon-sousuo-sousuo');
+        }
+    })
+    ```
+
