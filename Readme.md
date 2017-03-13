@@ -399,15 +399,6 @@
 
     `Object.prototype.slice.call(arguments);`
 
-1. 如何获取光标的水平位置?
-
-    ```JavaScript
-    function getX(e){
-        e = e || window.event;
-        //先检查非IE浏览器，再检查IE的位置
-        return e.pageX || e.clentX + document.body.scrollLeft;
-    }
-    ```
 1. 函数柯里化
 
     ```javascript
@@ -1099,6 +1090,16 @@
 1. 前端路由?前后端路由的区别?
 
     区别在于express是服务器端的路由，也就是说需要向后台服务器发送请求，然后服务器来决定来render那个.html，这也就是最早的mvc架构模式，而前端的路由是将这一过程放在浏览器端，也就是前台写js代码控制，不在请求服务器，前台一般利用histroy和hash来控制，达到不刷新页面可以使显示内容发生变化，这样好处是js代码不发生变化(浏览器端可以维护一个稳定的model)；一般单页应用就是前台来控制路由，这样速度更快，用户体验更好。单页应用还将模板拿到了浏览器端，从而解放了服务端，服务端趋于服务化。
+
+1. 如何获取光标的水平位置?
+
+    ```JavaScript
+    function getX(e){
+        e = e || window.event;
+        //先检查非IE浏览器，再检查IE的位置
+        return e.pageX || e.clentX + document.body.scrollLeft;
+    }
+    ```
 
 1. 原生JS实现鼠标拖拽
 
