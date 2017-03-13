@@ -62,6 +62,17 @@
     man.a();
     ```
 
+1. 用apply和call怎么继承原型链上的共享属性？通过空函数传值。新建一个空函数C。C实例化后C的实例属性就是空，然后用B的apply/call去继承C，相当于继承了C的实例属性。[详细说明](https://segmentfault.com/a/1190000007801452)
+
+    ```javascript
+    function inherits(Child, Parent) {
+        var F = function () {};
+        F.prototype = Parent.prototype;
+        Child.prototype = new F();
+        Child.prototype.constructor = Child;
+    }
+    ```
+
 1. javascript有哪几种创建对象的方式？
 
     ```javascript
@@ -1083,17 +1094,6 @@
     delegateEvent(odiv, "a", "click", function () {
         alert("1");
     })
-    ```
-
-1. 用apply和call怎么继承原型链上的共享属性？通过空函数传值。新建一个空函数C。C实例化后C的实例属性就是空，然后用B的apply/call去继承C，相当于继承了C的实例属性。[详细说明](https://segmentfault.com/a/1190000007801452)
-
-    ```javascript
-    function inherits(Child, Parent) {
-        var F = function () {};
-        F.prototype = Parent.prototype;
-        Child.prototype = new F();
-        Child.prototype.constructor = Child;
-    }
     ```
 
 1. 前端路由?前后端路由的区别?
