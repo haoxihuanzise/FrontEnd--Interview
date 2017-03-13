@@ -635,10 +635,6 @@
     L-V-H-A :  a:link {} a:visited {} a:hover {} a:active {}
     ```
 
-1. 让Chrome支持小于12px的文字
-
-    `body{-webkit-text-size-adjust:none}`
-
 1. 现在HTML5中css3可以写出一个旋转的立方体，请写出要用到的CSS属性。
 
     ```css
