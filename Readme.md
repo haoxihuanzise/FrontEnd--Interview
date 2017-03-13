@@ -321,6 +321,17 @@
         * 比如：navigator.userAgent
             * `//"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.101 Safari/537.36"`
 
+1. navigator对象
+
+    navigator对象包含有关浏览器的信息. [更多信息请点击](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/navigator)
+
+    | 属性 | 描述 |
+    |:-- |:-- |
+    |appCodeName|返回浏览器的代码名|
+    |appMinorVersion|返回浏览器的次级版本|
+    |appName|返回浏览器的名称|
+    |appVersion|返回浏览器的平台和版本信息|
+
 1. Canvas和SVG的比较
 
     | Canvas | SVG |
@@ -675,17 +686,6 @@
 1. Array自带的排序Sort是怎么实现的?
 
     基于一种更复杂的快排实现的(`sort`会破坏原数组内部的顺序)
-
-1. navigator对象
-
-    navigator对象包含有关浏览器的信息. [更多信息请点击](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/navigator)
-
-    | 属性 | 描述 |
-    |:-- |:-- |
-    |appCodeName|返回浏览器的代码名|
-    |appMinorVersion|返回浏览器的次级版本|
-    |appName|返回浏览器的名称|
-    |appVersion|返回浏览器的平台和版本信息|
 
 1. 手写jsonp的实现  [参考自github上charleylla的部分代码](https://gist.github.com/charleylla/e44a0ce59accea062ebf357e55489f02)
 
